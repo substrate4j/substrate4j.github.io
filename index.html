@@ -1,132 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Substrate4j - Java meets Polkadot</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Substrate4J — A native Java library for Substrate chains</title>
+<meta name="description" content="A full-featured, statically-typed Java library for Substrate-based blockchains">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIKCSB3aWR0aD0iMTAwJSIgdmlld0JveD0iMTg1LjQgMjQxIDY1MCA2NTAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMTg1LjQgMjQxIDY1MCA2NTAiIHhtbDpzcGFjZT0icHJlc2VydmUiPgoKPHN0eWxlPgoJLnN0ZWFtIHsgZmlsbDogI0Y4NzUwQzsgfQoJLmN1cCAgIHsgZmlsbDogI0Y4NzUwQzsgfQo8L3N0eWxlPgoKPGcgY2xhc3M9InN0ZWFtIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1MDksNjYwKSBzY2FsZSgwLjgpIHRyYW5zbGF0ZSgtMzY1LC01NTApIj4KCTxwYXRoIG9wYWNpdHk9IjEuMDAwMDAwIiBzdHJva2U9Im5vbmUiCgkJZD0iCglNMzYwLjUyMzMxNSw2MzEuNTM3NDc2CgkJQzMzMC45MzU2OTksNjEyLjU1NjE1MiAzMDQuODk2NzkwLDU5MC4xNzA4MzcgMjg0LjI3NjY3Miw1NjEuOTU5MTA2CgkJQzI2NS4yNTkxNTUsNTM1Ljk0MDAwMiAyNTIuOTgyMjY5LDUwNy4xNTc1OTMgMjQ5LjY2NTgxNyw0NzQuODI5NjUxCgkJQzI0NS40OTczNjAsNDM0LjE5NjU5NCAyNTYuMzA2ODI0LDM5Ny4wMzAzMzQgMjc1LjY5MTM0NSwzNjEuODYwNTA0CgkJQzI5MS4wMjA2MzAsMzM0LjA0ODE4NyAzMTEuMzM3MDM2LDMxMC4wOTI1OTAgMzMzLjM3MzIzMCwyODcuNDQwMDk0CgkJQzM1NS41NjQ1NDUsMjY0LjYyODE3NCAzNzcuNDM3NzQ0LDI0MS41MTYwMDYgMzk1Ljc4NDg1MSwyMTUuMzYzNDQ5CgkJQzQwOS41NTcxMjksMTk1LjczMjA0MCA0MjAuOTM1Njk5LDE3NC45MzM0NDEgNDI2Ljg4NTg2NCwxNTEuNDk3MDI1CgkJQzQzMi4yODAyMTIsMTMwLjI1MDA5MiA0MzEuOTA4MjAzLDEwOC45OTczMjIgNDI2Ljg3MzUwNSw4Ny43NDc2ODgKCQlDNDI2LjIzODY0Nyw4NS4wNjgwNDcgNDI1LjE3NDc3NCw4Mi40MzMyMTIgNDI1LjY2Mjg3Miw3OS41MzYyNDcKCQlDNDI3Ljg2MDg3MCw3OS40NjY5NTcgNDI4LjI4NDM2Myw4MS4xNTY4NzYgNDI5LjAyMTA4OCw4Mi4zMjI4OTEKCQlDNDUzLjEwMDMxMSwxMjAuNDMzMjU4IDQ1OC4zMDE2MDUsMTYxLjI2Mzc3OSA0NDYuNDgyMjY5LDIwNC40OTk3ODYKCQlDNDM4LjQ0MzM1OSwyMzMuOTA2NjQ3IDQyMi4wNTk4MTQsMjU4LjYxNTc1MyA0MDIuODcwNTQ0LDI4MS43NDUxMTcKCQlDMzg5LjAzMzYwMCwyOTguNDIzMTI2IDM3My42ODg2OTAsMzEzLjcxMjQwMiAzNTguOTY5Mjk5LDMyOS41NzY3ODIKCQlDMzM3LjkzNDI5NiwzNTIuMjQ3OTg2IDMxOC40MzY2NzYsMzc1Ljk4MDQ5OSAzMDUuNzQxMzk0LDQwNC41NzEzMjAKCQlDMjg3LjU3NTA3Myw0NDUuNDgzMzY4IDI4Ny44NDA2OTgsNDg2LjYwNjI2MiAzMDQuNjE0MTk3LDUyNy43NjIyMDcKCQlDMzIwLjU1MDc4MSw1NjYuODY0NTYzIDM0Ni43MDM1ODMsNTk4LjQ3MzM4OSAzNzcuNzgwMTUxLDYyNi40MjYyMDgKCQlDMzkwLjY5NDQ1OCw2MzguMDQyNDE5IDQwNC40MTYyOTAsNjQ4LjU1Mzc3MiA0MTguOTA1MjQzLDY1OC4xMDM2MzgKCQlDNDIwLjE1NTMwNCw2NTguOTI3NjEyIDQyMi4wOTc2NTYsNjU5LjM0NDg0OSA0MjEuOTU3MzM2LDY2Mi4xOTU2NzkKCQlDNDAwLjMyMDQ5Niw2NTQuMTE5NDQ2IDM4MC4xMTE1NzIsNjQzLjg3NjAzOCAzNjAuNTIzMzE1LDYzMS41Mzc0NzYKCXoiLz4KCTxwYXRoIG9wYWNpdHk9IjEuMDAwMDAwIiBzdHJva2U9Im5vbmUiCgkJZD0iCglNMzUwLjgwNTQ4MSw0MDcuOTQzMjk4CgkJQzM2Ny4yMjMyMDYsMzc0LjA5NzgwOSAzOTMuMDI3MzQ0LDM0OC43NDE4ODIgNDIxLjIyMDAwMSwzMjUuNDU1NTY2CgkJQzQ0MC4xMjY5NTMsMzA5LjgzODkyOCA0NjAuMjE3MTYzLDI5NS44MjgyNDcgNDgwLjYwNzM5MSwyODIuMjQzMTY0CgkJQzQ4Mi4wMDY4OTcsMjgxLjMxMDc2MCA0ODMuMjY4ODI5LDI3OS42MTM5ODMgNDg1LjQxMDAwNCwyODAuMzQyNDM4CgkJQzQ4Ni4wODk2OTEsMjgyLjIwNjY5NiA0ODQuNjUwMzkxLDI4My4xOTEyNTQgNDgzLjgzMjc5NCwyODQuMzAzMjg0CgkJQzQ2OS42MTYxODAsMzAzLjY0MDM1MCA0NTQuMTMwNjQ2LDMyMS45NTE3NTIgNDM4LjU0NDAwNiwzNDAuMTc5NTY1CgkJQzQyMC41NjUwMDIsMzYxLjIwNTEwOSA0MDIuNDAxMTg0LDM4Mi4xMTI4MjMgMzkwLjU5NTUyMCw0MDcuNTE1MDQ1CgkJQzM3Mi42NDk5NjMsNDQ2LjEyODQxOCAzNzIuNTc1MDczLDQ4NS4zOTAwMTUgMzg2LjY5MTI1NCw1MjUuMDc2Mjk0CgkJQzM5OS45MDI0OTYsNTYyLjIxODYyOCA0MjIuMjY3ODgzLDU5My40MjQzMTYgNDQ5LjQwNzMxOCw2MjEuNTIzNTYwCgkJQzQ1MC40NzE5NTQsNjIyLjYyNTg1NCA0NTIuMzIxOTkxLDYyMy4zMTA4NTIgNDUxLjk2OTIwOCw2MjUuNjc2OTQxCgkJQzQ0OS42MTcxMjYsNjI1LjgwNTg0NyA0NDcuOTQ1NzA5LDYyNC4yNDc1NTkgNDQ2LjE2MzM5MSw2MjMuMjc1NjM1CgkJQzQxMS4xNTM5MzEsNjA0LjE4NDc1MyAzODEuNjg4NjI5LDU3OC45OTEyMTEgMzYwLjcwNDY4MSw1NDQuNjkyNTY2CgkJQzM0My45MjMwOTYsNTE3LjI2Mjc1NiAzMzUuMjcyMTI1LDQ4Ny42MDAzMTEgMzM3LjgyNTIyNiw0NTUuMjMyOTQxCgkJQzMzOS4xMTkwNDksNDM4LjgyOTY4MSAzNDMuNjg2NzY4LDQyMy4yMDA2MjMgMzUwLjgwNTQ4MSw0MDcuOTQzMjk4Cgl6Ii8+CjwvZz4KCjxnIGNsYXNzPSJjdXAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNjUuOCwzNDUuNikgcm90YXRlKDk3LjUsNjc4LDM5MCkiPgoJPHBhdGggb3BhY2l0eT0iMS4wMDAwMDAiIHN0cm9rZT0ibm9uZSIKCQlkPSIKCU01NzcuNjY5NTU2LDE2MS4wODg2NTQKCQlDNTkzLjQ5ODUzNSwxNjIuOTA3ODM3IDYwNy43NjI3NTYsMTY3LjE5MDE4NiA2MTguODI4ODU3LDE3OC45MDQ2NDgKCQlDNjMzLjMyNzY5OCwxOTQuMjUzMDIxIDYzMS4xNzk4NzEsMjEzLjc4NzU4MiA2MTMuNjM4NzMzLDIyNS40MjIyNzIKCQlDNTkxLjQ1NTIwMCwyNDAuMTM2MTg1IDU1My43MTk5NzEsMjM1LjkwOTM5MyA1MzUuNDI2NzU4LDIxNi42NjE1MTQKCQlDNTIxLjIzODY0NywyMDEuNzMzMDAyIDUyMy4xNjI0MTUsMTgyLjM5MzY2MSA1NDAuMTc0MTk0LDE3MC44MDIzOTkKCQlDNTUxLjMxODQyMCwxNjMuMjA5MTA2IDU2My45NzA4MjUsMTYwLjkwMjYwMyA1NzcuNjY5NTU2LDE2MS4wODg2NTQKCXoiLz4KCTxwYXRoIG9wYWNpdHk9IjEuMDAwMDAwIiBzdHJva2U9Im5vbmUiCgkJZD0iCglNNjg1Ljg3NTEyMiwyMTMuMTA3ODgwCgkJQzcxMi42NjEwNzIsMjE1LjA0MDIyMiA3MzUuNzI1MjIwLDIzOC43MjUyODEgNzM5LjAxMDgwMywyNjUuMzM1MTc1CgkJQzc0MS44NzQ4NzgsMjg4LjUzMDc2MiA3MjUuMDk5MTIxLDMwNC41MzE4NjAgNzAyLjg2NDg2OCwyOTkuMjA3ODI1CgkJQzY3OS41NzA2NzksMjkzLjYyOTg4MyA2NTcuODQxMDAzLDI2Ny4zNzMzODMgNjU2LjkwMDE0NiwyNDMuMzA1NDk2CgkJQzY1Ni4yNTI4NjksMjI2Ljc0Nzk1NSA2NjcuMzI3ODgxLDIxNS4wMjQ4MjYgNjg1Ljg3NTEyMiwyMTMuMTA3ODgwCgl6Ii8+Cgk8cGF0aCBvcGFjaXR5PSIxLjAwMDAwMCIgc3Ryb2tlPSJub25lIgoJCWQ9IgoJTTc4Ny41Nzk5NTYsMzk4LjE3NTIzMgoJCUM3ODUuMzE0NzU4LDQwNi4zMjAzNzQgNzgyLjc1ODMwMSw0MTMuODExMDA1IDc3Ny4wNzE1OTQsNDE5Ljg2NTA1MQoJCUM3NjQuNTY1MTI1LDQzMy4xNzkyOTEgNzQ4LjA2NDI3MCw0MzIuNDI5OTAxIDczNi44Njk4MTIsNDE3LjkyNTc4MQoJCUM3MjIuOTQ1NDk2LDM5OS44ODQ3OTYgNzIxLjAyNjk3OCwzNjcuNTM5NjQyIDczMi43MTY0OTIsMzQ3LjkwMjQzNQoJCUM3NDIuNzM4NzA4LDMzMS4wNjYwNzEgNzYxLjc3NzIyMiwzMjguNzkwMzQ0IDc3NC45MzIzNzMsMzQzLjI5NjIwNAoJCUM3ODUuOTMzNDExLDM1NS40MjY3MjcgNzg5LjE3OTM4MiwzNzAuNDEyMTA5IDc4OC43OTQ4NjEsMzg2LjM1NDE4NwoJCUM3ODguNzAyOTQyLDM5MC4xNjQzNjggNzg4LjA3ODAwMywzOTMuOTYxNjM5IDc4Ny41Nzk5NTYsMzk4LjE3NTIzMgoJeiIvPgoJPHBhdGggb3BhY2l0eT0iMS4wMDAwMDAiIHN0cm9rZT0ibm9uZSIKCQlkPSIKCU03NjUuMTE4MTY0LDQ4Ny4xNjM2NjYKCQlDNzcyLjQ3MTA2OSw1MDcuMzAyNDI5IDc2NS41MzE2NzcsNTI0LjQzNDYzMSA3NTQuODQ1NjQyLDU0MC42MDY4NzMKCQlDNzQ5LjE4NDg3NSw1NDkuMTc0MDExIDc0MS43NjQxNjAsNTU1Ljk5NzA3MCA3MzEuOTAzMDc2LDU1OS44ODkwMzgKCQlDNzEzLjgwMTAyNSw1NjcuMDMzNDQ3IDY5Ni45MzY4OTAsNTU2Ljk2NjMwOSA2OTUuODQ2MTMwLDUzNy40ODA2NTIKCQlDNjk0LjQxNDc5NSw1MTEuOTExMTYzIDcwNS4wMzU2NDUsNDkxLjkwMzAxNSA3MjYuMjg0MDU4LDQ3Ny44ODgwMzEKCQlDNzM3LjU2NzU2Niw0NzAuNDQ1NzA5IDc0OC45NTQ1OTAsNDcwLjkzNDgxNCA3NTcuOTcyNTk1LDQ3Ny44MzUwODMKCQlDNzYxLjEwMjk2Niw0ODAuMjMwMzQ3IDc2My4xODIxMjksNDgzLjM4OTAzOCA3NjUuMTE4MTY0LDQ4Ny4xNjM2NjYKCXoiLz4KCTxwYXRoIG9wYWNpdHk9IjEuMDAwMDAwIiBzdHJva2U9Im5vbmUiCgkJZD0iCglNNjUzLjgyNTA3Myw1NjkuODI3MzkzCgkJQzY2NS4wNjkxNTMsNTczLjU0ODUyMyA2NzMuMDA3ODc0LDU4MC4wMjM2ODIgNjc0Ljk2MDk5OSw1OTEuOTE4Mjc0CgkJQzY3Ni40OTYxNTUsNjAxLjI2NzQ1NiA2NzIuNzczMjU0LDYwOS4zMTQwMjYgNjY3LjU1NjAzMCw2MTYuNjMzMTc5CgkJQzY1NC44MTc5MzIsNjM0LjUwMzIzNSA2MjUuNzIyMTA3LDY0NC42NzA4OTggNjA0LjU3ODg1Nyw2MzguODk2NDIzCgkJQzU4Mi41Nzg5MTgsNjMyLjg4ODE4NCA1NzUuMzA1NzI1LDYxMy4yMjg1MTYgNTg3Ljk4Mzk0OCw1OTQuMDM5OTc4CgkJQzYwMC43MjkxMjYsNTc0Ljc1MDA2MSA2MzAuOTc5Nzk3LDU2My41MDgyNDAgNjUzLjgyNTA3Myw1NjkuODI3MzkzCgl6Ii8+CjwvZz4KCjwvc3ZnPgo=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #ffffff;
+    --ink: #15171c;
+    --muted: #6b6e7c;
+    --line: #e8e8ec;
+    --accent: #f8750c;
+  }
 
-        body {
-            font-family: 'Courier New', monospace;
-            background: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  * { box-sizing: border-box; }
 
-        .grid-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: 0;
-        }
+  body{
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: clamp(32px, 10vh, 96px) clamp(18px, 5vw, 24px) clamp(32px, 8vh, 64px);
+  }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            text-align: center;
-        }
+  h1, h2 { font-family: 'IBM Plex Sans', sans-serif; margin: 0; }
+  code, pre, .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  a { color: inherit; }
 
-        .logo {
-            font-size: 4rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            letter-spacing: -2px;
-            animation: glitch 3s infinite;
-        }
+  .page{
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+    animation: rise .5s ease both;
+  }
+  @keyframes rise{ from{ opacity:0; transform: translateY(8px);} to{ opacity:1; transform: translateY(0);} }
+  @media (prefers-reduced-motion: reduce){ .page{ animation: none; } }
 
-        @keyframes glitch {
-            0%, 90%, 100% {
-                transform: translate(0);
-            }
-            92% {
-                transform: translate(-2px, 2px);
-            }
-            94% {
-                transform: translate(2px, -2px);
-            }
-        }
+  .mark{
+    width: clamp(52px, 12vw, 72px);
+    height: clamp(52px, 12vw, 72px);
+    margin: 0 auto 24px;
+  }
+  .mark svg{ width: 100%; height: 100%; display: block; }
 
-        .tagline {
-            font-size: 1.3rem;
-            color: #00ff00;
-            margin-bottom: 20px;
-            font-weight: normal;
-        }
+  h1{
+    font-size: clamp(26px, 6vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: #888;
-            max-width: 600px;
-            line-height: 1.8;
-            margin: 0 auto 30px;
-        }
+  .lede{
+    margin: 18px auto 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 38ch;
+  }
 
-        .status-banner {
-            background: linear-gradient(90deg, #00ff00 0%, #00cc00 100%);
-            color: #000;
-            padding: 15px 30px;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 30px 0;
-            animation: pulse 2s infinite;
-        }
+  .meta{
+    margin-top: 18px;
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
 
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
-            }
-        }
+  .gh{
+    margin-top: 26px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink);
+    color: #fff;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .gh:hover{ background: #000; transform: translateY(-1px); }
+  .gh svg{ width: 16px; height: 16px; }
 
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2.5rem;
-            }
+  .features{
+    margin-top: 48px;
+    text-align: left;
+    display: inline-block;
+  }
+  .features .eyebrow{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    font-weight: 500;
+    margin: 0 0 16px;
+    text-align: center;
+  }
+  .features ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .features li{
+    position: relative;
+    padding-left: 16px;
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 12px;
+    white-space: nowrap;
+  }
+  .features li::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 1.5px;
+    background: var(--accent);
+  }
 
-            .tagline {
-                font-size: 1rem;
-            }
+  footer.credit{
+    margin-top: 44px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  footer.credit a{ border-bottom: 1px solid var(--line); }
 
-            .subtitle {
-                font-size: 1rem;
-            }
-        }
-    </style>
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 400px){
+    .lede{ max-width: 32ch; }
+    .features li{ font-size: 14px; }
+  }
+</style>
 </head>
 <body>
-    <div class="grid-background"></div>
-    
-    <div class="container">
-        <div class="logo">SUBSTRATE4J</div>
-        <div class="tagline">&gt; Java meets Polkadot</div>
-        <p class="subtitle">
-            A complete, production-ready Java library 
-            for building on Substrate and Polkadot. No compromises. No workarounds. Just pure Java power.
-        </p>
-        <div class="status-banner">⚡ LAUNCHING SOON</div>
-    </div>
+
+<div class="page">
+  <div class="mark">
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+         viewBox="185.4 241 650 650" xml:space="preserve">
+      <style>
+        .steam { fill: #F8750C; }
+        .cup   { fill: #F8750C; }
+      </style>
+      <g class="steam" transform="translate(509,660) scale(0.8) translate(-365,-550)">
+        <path opacity="1.000000" stroke="none" d="
+          M360.523315,631.537476
+          C330.935699,612.556152 304.896790,590.170837 284.276672,561.959106
+          C265.259155,535.940002 252.982269,507.157593 249.665817,474.829651
+          C245.497360,434.196594 256.306824,397.030334 275.691345,361.860504
+          C291.020630,334.048187 311.337036,310.092590 333.373230,287.440094
+          C355.564545,264.628174 377.437744,241.516006 395.784851,215.363449
+          C409.557129,195.732040 420.935699,174.933441 426.885864,151.497025
+          C432.280212,130.250092 431.908203,108.997322 426.873505,87.747688
+          C426.238647,85.068047 425.174774,82.433212 425.662872,79.536247
+          C427.860870,79.466957 428.284363,81.156876 429.021088,82.322891
+          C453.100311,120.433258 458.301605,161.263779 446.482269,204.499786
+          C438.443359,233.906647 422.059814,258.615753 402.870544,281.745117
+          C389.033600,298.423126 373.688690,313.712402 358.969299,329.576782
+          C337.934296,352.247986 318.436676,375.980499 305.741394,404.571320
+          C287.575073,445.483368 287.840698,486.606262 304.614197,527.762207
+          C320.550781,566.864563 346.703583,598.473389 377.780151,626.426208
+          C390.694458,638.042419 404.416290,648.553772 418.905243,658.103638
+          C420.155304,658.927612 422.097656,659.344849 421.957336,662.195679
+          C400.320496,654.119446 380.111572,643.876038 360.523315,631.537476
+          z"/>
+        <path opacity="1.000000" stroke="none" d="
+          M350.805481,407.943298
+          C367.223206,374.097809 393.027344,348.741882 421.220001,325.455566
+          C440.126953,309.838928 460.217163,295.828247 480.607391,282.243164
+          C482.006897,281.310760 483.268829,279.613983 485.410004,280.342438
+          C486.089691,282.206696 484.650391,283.191254 483.832794,284.303284
+          C469.616180,303.640350 454.130646,321.951752 438.544006,340.179565
+          C420.565002,361.205109 402.401184,382.112823 390.595520,407.515045
+          C372.649963,446.128418 372.575073,485.390015 386.691254,525.076294
+          C399.902496,562.218628 422.267883,593.424316 449.407318,621.523560
+          C450.471954,622.625854 452.321991,623.310852 451.969208,625.676941
+          C449.617126,625.805847 447.945709,624.247559 446.163391,623.275635
+          C411.153931,604.184753 381.688629,578.991211 360.704681,544.692566
+          C343.923096,517.262756 335.272125,487.600311 337.825226,455.232941
+          C339.119049,438.829681 343.686768,423.200623 350.805481,407.943298
+          z"/>
+      </g>
+      <g class="cup" transform="translate(-165.8,345.6) rotate(97.5,678,390)">
+        <path opacity="1.000000" stroke="none" d="
+          M577.669556,161.088654
+          C593.498535,162.907837 607.762756,167.190186 618.828857,178.904648
+          C633.327698,194.253021 631.179871,213.787582 613.638733,225.422272
+          C591.455200,240.136185 553.719971,235.909393 535.426758,216.661514
+          C521.238647,201.733002 523.162415,182.393661 540.174194,170.802399
+          C551.318420,163.209106 563.970825,160.902603 577.669556,161.088654
+          z"/>
+        <path opacity="1.000000" stroke="none" d="
+          M685.875122,213.107880
+          C712.661072,215.040222 735.725220,238.725281 739.010803,265.335175
+          C741.874878,288.530762 725.099121,304.531860 702.864868,299.207825
+          C679.570679,293.629883 657.841003,267.373383 656.900146,243.305496
+          C656.252869,226.747955 667.327881,215.024826 685.875122,213.107880
+          z"/>
+        <path opacity="1.000000" stroke="none" d="
+          M787.579956,398.175232
+          C785.314758,406.320374 782.758301,413.811005 777.071594,419.865051
+          C764.565125,433.179291 748.064270,432.429901 736.869812,417.925781
+          C722.945496,399.884796 721.026978,367.539642 732.716492,347.902435
+          C742.738708,331.066071 761.777222,328.790344 774.932373,343.296204
+          C785.933411,355.426727 789.179382,370.412109 788.794861,386.354187
+          C788.702942,390.164368 788.078003,393.961639 787.579956,398.175232
+          z"/>
+        <path opacity="1.000000" stroke="none" d="
+          M765.118164,487.163666
+          C772.471069,507.302429 765.531677,524.434631 754.845642,540.606873
+          C749.184875,549.174011 741.764160,555.997070 731.903076,559.889038
+          C713.801025,567.033447 696.936890,556.966309 695.846130,537.480652
+          C694.414795,511.911163 705.035645,491.903015 726.284058,477.888031
+          C737.567566,470.445709 748.954590,470.934814 757.972595,477.835083
+          C761.102966,480.230347 763.182129,483.389038 765.118164,487.163666
+          z"/>
+        <path opacity="1.000000" stroke="none" d="
+          M653.825073,569.827393
+          C665.069153,573.548523 673.007874,580.023682 674.960999,591.918274
+          C676.496155,601.267456 672.773254,609.314026 667.556030,616.633179
+          C654.817932,634.503235 625.722107,644.670898 604.578857,638.896423
+          C582.578918,632.888184 575.305725,613.228516 587.983948,594.039978
+          C600.729126,574.750061 630.979797,563.508240 653.825073,569.827393
+          z"/>
+      </g>
+    </svg>
+  </div>
+
+  <h1>Substrate4J</h1>
+  <p class="lede">A full-featured, statically-typed Java library for Substrate-based blockchains</p>
+  <p class="lede">Interact with Polkadot, Kusama, and any Substrate chain</p>
+  <a class="gh" href="https://github.com/substrate4j/substrate4j" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 5.02 3.26 9.28 7.77 10.78.57.1.78-.25.78-.55v-2.15c-3.16.69-3.83-1.34-3.83-1.34-.52-1.31-1.26-1.66-1.26-1.66-1.03-.7.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.52-.29-5.17-1.26-5.17-5.6 0-1.24.44-2.25 1.17-3.04-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.14 1.16a10.9 10.9 0 0 1 5.72 0c2.18-1.47 3.14-1.16 3.14-1.16.62 1.57.23 2.73.11 3.02.73.79 1.17 1.8 1.17 3.04 0 4.35-2.65 5.31-5.18 5.59.41.35.77 1.04.77 2.11v3.13c0 .3.21.66.79.55 4.5-1.51 7.76-5.76 7.76-10.78C23.02 5.24 18.27.5 12 .5Z"/></svg>
+    View on GitHub
+  </a>
+  <div class="meta">Java 21+ · Apache 2.0</div>
+
+  <div class="features">
+    <p class="eyebrow">FEATURES</p>
+    <ul>
+      <li>Static and type-safe APIs and types</li>
+      <li>Chain-specific clients generated from runtime metadata</li>
+      <li>Construct, sign, and submit extrinsics</li>
+      <li>Read and subscribe to storage &amp; events</li>
+      <li>Built on the new Polkadot JSON-RPC spec</li>
+      <li>SR25519, Ed25519 &amp; ECDSA — pure Java</li>
+      <li>Async and non-blocking</li>
+    </ul>
+  </div>
+
+  <footer class="credit">
+    © 2026 Substrate4J · Apache License 2.0
+  </footer>
+</div>
+
 </body>
 </html>
-
